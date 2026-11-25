@@ -1,0 +1,1414 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PortBoard · 本地服务</title>
+<link rel="icon" href="data:,">
+<style>
+  :root, [data-theme="minimal"] {
+    --bg: #f7f7f8;
+    --header-bg: rgba(255, 255, 255, 0.9);
+    --surface: #ffffff;
+    --surface-2: #ffffff;
+    --surface-sub: #f4f4f5;
+    --surface-hover: #f3f4f6;
+    --th-bg: #fafafa;
+    --log-bg: #18181b;
+    --log-text: #e4e4e7;
+    --line: #e5e7eb;
+    --line-strong: #d1d5db;
+    --text: #111827;
+    --muted: #6b7280;
+    --dim: #9ca3af;
+    --accent: #059669;
+    --accent-bg: rgba(5, 150, 105, 0.09);
+    --primary-bg: #111827;
+    --primary-hover: #1f2937;
+    --primary-border: #111827;
+    --primary-text: #ffffff;
+    --blue: #2563eb;
+    --blue-bg: rgba(37, 99, 235, 0.08);
+    --amber: #d97706;
+    --amber-bg: rgba(217, 119, 6, 0.10);
+    --red: #dc2626;
+    --red-bg: rgba(220, 38, 38, 0.08);
+    --radius: 10px;
+    --radius-sm: 7px;
+    --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  }
+  [data-theme="warm"] {
+    --bg: #f5f2eb;
+    --header-bg: rgba(253, 252, 249, 0.9);
+    --surface: #fdfcf9;
+    --surface-2: #fdfcf9;
+    --surface-sub: #f3efe6;
+    --surface-hover: #efeae0;
+    --th-bg: #f7f4ec;
+    --log-bg: #1c1917;
+    --log-text: #e7e5e4;
+    --line: #e4ddd0;
+    --line-strong: #d2c8b6;
+    --text: #292524;
+    --muted: #78716c;
+    --dim: #a8a29e;
+    --accent: #15803d;
+    --accent-bg: rgba(21, 128, 61, 0.09);
+    --primary-bg: #b4532a;
+    --primary-hover: #9a4420;
+    --primary-border: #b4532a;
+    --primary-text: #fffcf8;
+    --blue: #2c5282;
+    --blue-bg: rgba(44, 82, 130, 0.09);
+    --amber: #b45309;
+    --amber-bg: rgba(180, 83, 9, 0.10);
+    --red: #b91c1c;
+    --red-bg: rgba(185, 28, 28, 0.08);
+    --card-shadow: 0 1px 2px rgba(41, 37, 36, 0.04);
+    --shadow: 0 16px 40px rgba(41, 37, 36, 0.12);
+  }
+  [data-theme="classic"] {
+    --bg: #f6f8fa;
+    --header-bg: rgba(255, 255, 255, 0.92);
+    --surface: #ffffff;
+    --surface-2: #ffffff;
+    --surface-sub: #f6f8fa;
+    --surface-hover: #f3f6fa;
+    --th-bg: #f6f8fa;
+    --log-bg: #1f2328;
+    --log-text: #e6edf3;
+    --line: #d0d7de;
+    --line-strong: #afb8c1;
+    --text: #1f2328;
+    --muted: #656d76;
+    --dim: #8c959f;
+    --accent: #1a7f37;
+    --accent-bg: rgba(26, 127, 55, 0.10);
+    --primary-bg: #0969da;
+    --primary-hover: #0550ae;
+    --primary-border: #0969da;
+    --primary-text: #ffffff;
+    --blue: #0969da;
+    --blue-bg: rgba(9, 105, 218, 0.09);
+    --amber: #9a6700;
+    --amber-bg: rgba(154, 103, 0, 0.10);
+    --red: #cf222e;
+    --red-bg: rgba(207, 34, 46, 0.09);
+    --card-shadow: 0 1px 3px rgba(31, 35, 40, 0.04);
+    --shadow: 0 16px 40px rgba(31, 35, 40, 0.14);
+  }
+  [data-theme="graphite"] {
+    --bg: #18181b;
+    --header-bg: rgba(24, 24, 27, 0.88);
+    --surface: #202024;
+    --surface-2: #1d1d21;
+    --surface-sub: #18181b;
+    --surface-hover: #27272c;
+    --th-bg: #1b1b1f;
+    --log-bg: #111114;
+    --log-text: #d4d4d8;
+    --line: rgba(255, 255, 255, 0.09);
+    --line-strong: rgba(255, 255, 255, 0.16);
+    --text: #f4f4f5;
+    --muted: #a1a1aa;
+    --dim: #71717a;
+    --accent: #34d399;
+    --accent-bg: rgba(52, 211, 153, 0.12);
+    --primary-bg: #e4e4e7;
+    --primary-hover: #ffffff;
+    --primary-border: #e4e4e7;
+    --primary-text: #18181b;
+    --blue: #93c5fd;
+    --blue-bg: rgba(147, 197, 253, 0.11);
+    --amber: #fbbf24;
+    --amber-bg: rgba(251, 191, 36, 0.12);
+    --red: #f87171;
+    --red-bg: rgba(248, 113, 113, 0.12);
+    --card-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 24px rgba(0, 0, 0, 0.25);
+    --shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font: 14px/1.55 "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color .18s, color .18s;
+  }
+  code, .mono { font-family: "Cascadia Mono", "SFMono-Regular", Consolas, ui-monospace, monospace; }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  header {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    padding: 14px 28px; border-bottom: 1px solid var(--line);
+    background: var(--header-bg);
+    position: sticky; top: 0; z-index: 20; backdrop-filter: blur(12px);
+  }
+  .brand { display: flex; align-items: center; gap: 9px; font-weight: 650; font-size: 16px; letter-spacing: .2px; }
+  .brand small { color: var(--muted); font-weight: 400; font-size: 12px; }
+  .brand-mark { width: 8px; height: 8px; border-radius: 2px; background: var(--accent); }
+  .conn-badge {
+    font-size: 11px; color: var(--muted); padding: 2px 8px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--surface);
+  }
+  .conn-badge.live { color: var(--accent); border-color: rgba(52,211,153,0.28); background: var(--accent-bg); }
+  .theme-dots {
+    display: inline-flex; align-items: center; gap: 6px; padding: 5px 8px;
+    border-radius: 999px; border: 1px solid var(--line); background: var(--surface);
+  }
+  .theme-dot {
+    width: 14px; height: 14px; padding: 0; border-radius: 50%;
+    border: 1px solid rgba(128, 128, 128, 0.35); cursor: pointer;
+    transition: transform .12s, box-shadow .12s;
+  }
+  .theme-dot:hover { transform: scale(1.12); background: inherit; border-color: rgba(128, 128, 128, 0.55); }
+  .theme-dot.active { box-shadow: 0 0 0 2px var(--surface), 0 0 0 3.5px var(--text); }
+  .spacer { flex: 1; }
+  .actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+  input, select, button, textarea {
+    font: inherit; color: var(--text); background: var(--surface);
+    border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 7px 11px; outline: none;
+    transition: border-color .15s, box-shadow .15s, background .15s;
+  }
+  input:focus, select:focus, textarea:focus { border-color: #36577a; box-shadow: 0 0 0 3px rgba(96,165,250,.12); }
+  input::placeholder, textarea::placeholder { color: var(--dim); }
+  button { cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 5px; white-space: nowrap; }
+  button:hover:not(:disabled) { background: var(--surface-hover); border-color: var(--line-strong); }
+  button:active:not(:disabled) { transform: translateY(1px); }
+  button.primary { background: var(--primary-bg); border-color: var(--primary-border); color: var(--primary-text); font-weight: 600; }
+  button.primary:hover:not(:disabled) { background: var(--primary-hover); border-color: var(--primary-hover); }
+  button.ghost { background: transparent; border-color: transparent; color: var(--muted); }
+  button.ghost:hover:not(:disabled) { background: var(--surface-hover); color: var(--text); border-color: var(--line); }
+  button.danger { color: var(--red); }
+  button.danger:hover:not(:disabled) { border-color: var(--red); color: var(--red); background: var(--red-bg); }
+  button.danger-solid { background: linear-gradient(180deg, #b91c1c, #991b1b); border-color: #dc2626; color: #fef2f2; font-weight: 600; }
+  button.danger-solid:hover:not(:disabled) { background: linear-gradient(180deg, #dc2626, #b91c1c); }
+  button:disabled { opacity: .45; cursor: default; }
+
+  main { padding: 22px 28px 64px; max-width: 1320px; margin: 0 auto; }
+
+  .stats { display: grid; grid-template-columns: repeat(4, minmax(120px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--line); border-radius: var(--radius); padding: 11px 15px;
+    box-shadow: var(--card-shadow);
+    cursor: pointer; transition: border-color .15s, background .15s;
+    display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+  }
+  .stat:hover { border-color: var(--line-strong); background: var(--surface-hover); }
+  .stat.active { border-color: var(--blue); box-shadow: var(--card-shadow), inset 0 0 0 1px var(--blue-bg); }
+  .stat .k { color: var(--muted); font-size: 12px; letter-spacing: .2px; }
+  .stat .v { font-size: 20px; font-weight: 650; font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .stat.run .v { color: var(--accent); }
+  .stat.stop .v { color: var(--amber); }
+  .stat.never .v { color: var(--dim); }
+  .stats-bottom { display: grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap: 10px; }
+  .stat-res {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 13px 16px; box-shadow: var(--card-shadow);
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .stat-res .k { color: var(--muted); font-size: 12px; }
+  .stat-res .sub-k { color: var(--dim); font-size: 11px; margin-top: 2px; }
+  .stat-res .v { font-size: 20px; font-weight: 650; font-variant-numeric: tabular-nums; color: var(--text); }
+
+  .panel {
+    background: linear-gradient(180deg, var(--surface), var(--surface-2));
+    border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; margin-bottom: 18px;
+    box-shadow: var(--card-shadow);
+  }
+  .panel-head {
+    display: flex; align-items: center; gap: 10px; padding: 13px 18px;
+    border-bottom: 1px solid var(--line); font-weight: 600; font-size: 13px; flex-wrap: wrap;
+  }
+  .panel-head .hint { color: var(--muted); font-weight: 400; font-size: 12px; }
+
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 13px 16px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  th {
+    color: var(--muted); font-weight: 500; font-size: 12px; letter-spacing: .3px;
+    background: var(--th-bg); user-select: none;
+  }
+  th.sortable { cursor: pointer; }
+  th.sortable:hover { color: var(--text); }
+  th .sort-ind { margin-left: 4px; font-size: 10px; color: var(--blue); }
+  tbody tr { transition: background .12s; cursor: pointer; }
+  tbody tr:hover { background: var(--surface-hover); }
+  tbody tr.selected { background: rgba(96, 165, 250, 0.08); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 500;
+    padding: 3px 9px; border-radius: 999px; border: 1px solid transparent; white-space: nowrap;
+  }
+  .status-pill.running { color: var(--accent); background: var(--accent-bg); border-color: rgba(52,211,153,0.22); }
+  .status-pill.stopped { color: var(--amber); background: var(--amber-bg); border-color: rgba(251,191,36,0.22); }
+  .status-pill.never { color: var(--muted); background: rgba(88,105,127,0.12); border-color: rgba(88,105,127,0.22); }
+  .status-pill.unknown { color: var(--muted); background: rgba(88,105,127,0.08); border-color: var(--line); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .status-pill.running .dot { box-shadow: 0 0 8px rgba(52,211,153,.7); }
+
+  .tag { font-size: 11px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+  .tag.manual { color: var(--blue); border-color: rgba(125,211,252,0.25); background: var(--blue-bg); }
+  .tag.agent { color: var(--accent); border-color: rgba(52,211,153,0.25); background: var(--accent-bg); }
+  .tag.scan { color: #a78bfa; border-color: rgba(167,139,250,0.28); background: rgba(167,139,250,0.10); }
+  .http-pill {
+    font-size: 11px; padding: 1px 6px; border-radius: 6px; font-family: "Cascadia Mono", Consolas, monospace;
+    border: 1px solid var(--line); color: var(--muted); background: var(--surface-sub);
+  }
+  .http-pill.ok { color: var(--accent); border-color: rgba(52,211,153,0.25); }
+  .http-pill.bad { color: var(--red); border-color: rgba(248,113,113,0.3); }
+
+  .name-row { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+  .name { font-weight: 600; color: var(--text); }
+  .ext-link {
+    font-size: 12px; padding: 1px 5px; border-radius: 5px; border: 1px solid transparent;
+    color: var(--muted); text-decoration: none; transition: color .15s, background .15s;
+  }
+  .ext-link:hover { color: var(--blue); background: var(--blue-bg); text-decoration: none; }
+  .sub { color: var(--dim); font-size: 12px; margin-top: 2px; max-width: 440px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .port { font-family: "Cascadia Mono", Consolas, monospace; color: var(--blue); font-variant-numeric: tabular-nums; font-weight: 550; }
+  .idle-warn { color: var(--red); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .idle-ok { color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  .row-actions { display: flex; gap: 6px; justify-content: flex-end; flex-wrap: nowrap; align-items: center; }
+  .row-actions button { padding: 5px 9px; font-size: 12px; border-radius: 7px; gap: 4px; color: var(--muted); }
+  .row-actions button:hover:not(:disabled) { color: var(--text); }
+  .row-actions button svg { width: 13px; height: 13px; flex-shrink: 0; }
+  .row-actions button.act-start:hover:not(:disabled) { color: var(--accent); border-color: var(--accent); background: var(--accent-bg); }
+  .row-actions button.act-stop:hover:not(:disabled) { color: var(--red); border-color: var(--red); background: var(--red-bg); }
+  .row-actions button:disabled { opacity: .35; cursor: not-allowed; }
+  .copy-btn { padding: 1px 6px; font-size: 11px; margin-left: 6px; color: var(--muted); border-radius: 5px; }
+  .conflict-pill { font-size: 11px; padding: 1px 6px; border-radius: 6px; color: var(--amber); background: var(--amber-bg); border: 1px solid rgba(251, 191, 36, 0.3); }
+  .bulk-bar { display: none; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+  .bulk-bar.show { display: flex; }
+  .bulk-bar button { padding: 3px 9px; font-size: 12px; border-radius: 6px; }
+  .chk { width: 15px; height: 15px; accent-color: var(--primary-bg); cursor: pointer; margin: 0; }
+  .sweep-sel { padding: 2px 6px; font-size: 11px; border-radius: 6px; color: var(--muted); }
+  .ev-item { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 13px; align-items: baseline; }
+  .ev-item:last-child { border-bottom: none; }
+  .ev-time { color: var(--dim); font-size: 11px; min-width: 68px; font-family: "Cascadia Mono", Consolas, monospace; }
+
+  .empty { padding: 40px 16px; text-align: center; color: var(--muted); }
+  .empty b { color: var(--text); }
+
+  .scan-drawer-list { display: flex; flex-direction: column; gap: 8px; }
+  .scan-item {
+    display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+    border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface-sub);
+  }
+  .scan-item:hover { border-color: var(--line-strong); background: var(--surface-hover); }
+  .scan-item .p { color: var(--blue); font-family: "Cascadia Mono", Consolas, monospace; font-weight: 600; min-width: 58px; }
+  .scan-item .info { flex: 1; min-width: 0; }
+  .scan-item .proc { font-size: 13px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .scan-item .addr { color: var(--dim); font-size: 11px; margin-top: 2px; }
+  .scan-item .addr.pub { color: var(--amber); }
+  .scan-item button { padding: 4px 10px; font-size: 12px; border-radius: 6px; }
+  .ignored-bar {
+    padding: 12px 0 0; border-top: 1px solid var(--line); margin-top: 8px;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12px; color: var(--muted);
+  }
+  .ignored-chip {
+    display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px;
+    border-radius: 999px; border: 1px solid var(--line); background: var(--surface-sub); color: var(--muted);
+  }
+  .ignored-chip button { padding: 0 4px; font-size: 11px; border: none; background: transparent; color: var(--blue); }
+
+  dialog {
+    background: var(--surface); color: var(--text); border: 1px solid var(--line-strong);
+    border-radius: 14px; padding: 0; width: min(580px, 94vw); box-shadow: var(--shadow);
+  }
+  dialog::backdrop { background: rgba(3, 7, 11, 0.72); backdrop-filter: blur(3px); }
+  .dlg-head { padding: 15px 18px; border-bottom: 1px solid var(--line); font-weight: 600; display: flex; align-items: center; justify-content: space-between; }
+  .dlg-body { padding: 16px 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { font-size: 12px; color: var(--muted); }
+  .field input, .field textarea { width: 100%; }
+  .dlg-foot { padding: 13px 18px; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; gap: 8px; }
+  .confirm-body { padding: 18px; color: var(--muted); line-height: 1.65; white-space: pre-wrap; font-size: 13px; }
+
+  .drawer-backdrop {
+    position: fixed; inset: 0; background: rgba(3, 7, 11, 0.55); backdrop-filter: blur(2px);
+    z-index: 35; opacity: 0; pointer-events: none; transition: opacity .2s;
+  }
+  .drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+  .drawer {
+    position: fixed; top: 0; right: 0; bottom: 0; width: min(520px, 94vw);
+    background: var(--surface); border-left: 1px solid var(--line-strong);
+    box-shadow: var(--shadow); z-index: 40; display: flex; flex-direction: column;
+    transform: translateX(100%); transition: transform .22s cubic-bezier(.22, .61, .36, 1);
+  }
+  .drawer.open { transform: translateX(0); }
+  .drawer-head {
+    padding: 16px 20px; border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .drawer-head h3 { margin: 0; font-size: 16px; font-weight: 650; }
+  .drawer-body { flex: 1; overflow: auto; padding: 18px 20px; display: flex; flex-direction: column; gap: 16px; }
+  .kv-grid { display: grid; grid-template-columns: 96px 1fr; gap: 8px 12px; font-size: 13px; }
+  .kv-k { color: var(--muted); }
+  .kv-v { color: var(--text); word-break: break-all; }
+  .log-box {
+    background: var(--log-bg); border: 1px solid var(--line); border-radius: var(--radius-sm);
+    padding: 12px; font-size: 12px; line-height: 1.5; color: var(--log-text);
+    max-height: 320px; overflow: auto; white-space: pre-wrap; word-break: break-word; margin: 0;
+  }
+  .log-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%) translateY(20px);
+    background: var(--surface); border: 1px solid var(--line-strong); color: var(--text);
+    padding: 9px 16px; border-radius: 10px; opacity: 0; pointer-events: none;
+    transition: opacity .2s, transform .2s; font-size: 13px; z-index: 60; box-shadow: var(--shadow);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.err { border-color: var(--red); color: var(--red); }
+
+  .banner {
+    display: none; align-items: center; gap: 10px; padding: 10px 28px;
+    background: #271d0b; border-bottom: 1px solid #5b4412; color: #fde68a; font-size: 13px;
+  }
+  .banner.show { display: flex; }
+  .banner input { width: 220px; }
+
+  @media (max-width: 760px) {
+    header, main { padding-left: 16px; padding-right: 16px; }
+    .dlg-body { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="brand-mark"></span>
+    <span>PortBoard</span>
+    <small>本地服务</small>
+    <span class="conn-badge" id="connBadge" title="点击重新连接实时同步" style="cursor:pointer">连接中</span>
+  </div>
+  <div class="spacer"></div>
+  <div class="actions">
+    <input id="search" placeholder="搜索名称 / 端口… (/)" style="width:200px">
+    <div class="theme-dots" id="themeDots" role="group" aria-label="配色主题">
+      <button type="button" class="theme-dot" data-theme-val="minimal" title="极简纯白" style="background:#ffffff"></button>
+      <button type="button" class="theme-dot" data-theme-val="warm" title="暖米纸感" style="background:#ebe3d2"></button>
+      <button type="button" class="theme-dot" data-theme-val="classic" title="经典蓝白" style="background:#3b82f6"></button>
+      <button type="button" class="theme-dot" data-theme-val="graphite" title="中性石墨" style="background:#27272a"></button>
+    </div>
+    <button class="ghost" id="eventsBtn" title="最近动态">动态</button>
+    <button id="scanBtn" title="扫描本机监听端口">扫描</button>
+    <button id="addBtn" class="primary" title="手动添加服务">+ 添加</button>
+  </div>
+</header>
+
+<div class="banner" id="tokenBanner">
+  <span>此实例启用了访问令牌</span>
+  <input id="tokenInput" placeholder="x-portboard-token">
+  <button id="tokenSave">保存</button>
+</div>
+
+<main>
+  <section class="stats">
+    <button class="stat active" data-filter="all"><span class="k">全部</span><span class="v" id="sTotal">0</span></button>
+    <button class="stat run" data-filter="running"><span class="k">运行中</span><span class="v" id="sRunning">0</span></button>
+    <button class="stat stop" data-filter="stopped"><span class="k">已停止</span><span class="v" id="sStopped">0</span></button>
+    <button class="stat never" data-filter="never"><span class="k">未运行</span><span class="v" id="sNever">0</span></button>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <span>服务与任务</span>
+      <span class="hint" id="tableHint"></span>
+      <div class="bulk-bar" id="bulkBar">
+        <span id="bulkCount">已选 0 项</span>
+        <button type="button" id="bulkCheck">批量检查</button>
+        <button type="button" id="bulkStop" class="danger">批量停止</button>
+        <button type="button" id="bulkDel" class="danger">批量删除</button>
+        <button type="button" class="ghost" id="bulkClear">取消</button>
+      </div>
+      <div class="spacer"></div>
+    </div>
+    <div style="overflow:auto">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:38px;text-align:center"><input type="checkbox" class="chk" id="chkAll" title="全选"></th>
+            <th class="sortable" data-sort="status" style="width:104px">状态<span class="sort-ind"></span></th>
+            <th class="sortable" data-sort="name">名称<span class="sort-ind"></span></th>
+            <th class="sortable" data-sort="port" style="width:82px">端口<span class="sort-ind"></span></th>
+            <th style="width:168px">进程</th>
+            <th class="sortable" data-sort="idle" style="width:116px">最近活跃<span class="sort-ind"></span></th>
+            <th style="width:246px;text-align:right">操作</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="empty" style="display:none">
+      还没有符合条件的服务。点右上角 <b>扫描</b> 发现正在运行的进程，或 <b>+ 添加</b> 手动加入。
+    </div>
+  </section>
+
+  <section class="stats-bottom">
+    <div class="stat-res">
+      <div>
+        <div class="k">服务总内存占用</div>
+        <div class="sub-k" id="rMemSub">等待采样…</div>
+      </div>
+      <div class="v mono" id="rMem">-</div>
+    </div>
+    <div class="stat-res">
+      <div>
+        <div class="k">服务总 CPU 占用</div>
+        <div class="sub-k" style="display:flex;align-items:center;gap:8px;margin-top:4px">
+          <span id="rCpuSub">等待采样…</span>
+          <select id="sweepSelect" class="sweep-sel" title="探活与资源采样周期">
+            <option value="5000">每 5 秒</option>
+            <option value="15000">每 15 秒</option>
+            <option value="60000">每 60 秒</option>
+            <option value="0">手动</option>
+          </select>
+        </div>
+      </div>
+      <div class="v mono" id="rCpu">-</div>
+    </div>
+  </section>
+</main>
+
+<dialog id="dlg">
+  <form method="dialog" id="dlgForm">
+    <div class="dlg-head">
+      <span id="dlgTitle">登记服务</span>
+    </div>
+    <div class="dlg-body">
+      <div class="field"><label>名称 *</label><input name="name" required maxlength="80" placeholder="本地看板"></div>
+      <div class="field"><label>端口 *</label><input name="port" required type="number" min="1" max="65535" placeholder="3000"></div>
+      <div class="field full"><label>访问地址 / URL</label><input name="url" placeholder="http://127.0.0.1:3000"></div>
+      <div class="field full"><label>启动命令</label><input name="command" placeholder="python run_dashboard.py"></div>
+      <div class="field full"><label>停止命令（可选）</label><input name="stopCommand" placeholder="留空则直接结束进程树；超时也会回退结束"></div>
+      <div class="field full"><label>工作目录</label><input name="cwd" placeholder="项目所在目录路径"></div>
+      <div class="field full"><label>环境变量（可选，每行 KEY=VALUE）</label><textarea name="env" rows="2" placeholder="PORT=3000&#10;PYTHONUTF8=1"></textarea></div>
+      <div class="field"><label>外部日志路径（可选）</label><input name="logFile" placeholder="留空则用托管日志"></div>
+      <div class="field"><label>进程指纹（可选，防误杀）</label><input name="processFingerprint" placeholder="留空首次运行时自动捕获"></div>
+      <div class="field full"><label>备注</label><textarea name="note" rows="2" placeholder="用途说明或预计停用时间"></textarea></div>
+    </div>
+    <div class="dlg-foot">
+      <button value="cancel" class="ghost" type="button" id="dlgCancel">取消</button>
+      <button value="ok" class="primary" type="submit" id="dlgOk">保存</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="confirmDlg">
+  <div class="dlg-head"><span id="confirmTitle">确认操作</span></div>
+  <div class="confirm-body" id="confirmMsg"></div>
+  <div class="dlg-foot">
+    <button class="ghost" type="button" id="confirmCancel">取消</button>
+    <button class="primary" type="button" id="confirmOk">确认</button>
+  </div>
+</dialog>
+
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3 id="drawerTitle">服务详情</h3>
+    <span id="drawerStatus"></span>
+    <div class="spacer"></div>
+    <button id="drawerEdit" style="padding:4px 10px;font-size:12px">编辑</button>
+    <button id="drawerDel" class="danger" style="padding:4px 10px;font-size:12px">删除</button>
+    <button class="ghost" id="drawerClose" style="padding:4px 9px">关闭</button>
+  </div>
+  <div class="drawer-body">
+    <div class="kv-grid" id="drawerMeta"></div>
+    <div>
+      <div class="log-head">
+        <span style="font-weight:600;font-size:13px">托管启动日志</span>
+        <div style="display:flex;gap:6px">
+          <button class="ghost" id="copyLogs" style="padding:3px 9px;font-size:12px">复制日志</button>
+          <button class="ghost" id="refreshLogs" style="padding:3px 9px;font-size:12px">刷新</button>
+        </div>
+      </div>
+      <pre class="log-box mono" id="drawerLogs">(尚无日志)</pre>
+    </div>
+  </div>
+</aside>
+
+<aside class="drawer" id="scanDrawer">
+  <div class="drawer-head">
+    <h3>未登记的监听端口</h3>
+    <div class="spacer"></div>
+    <button id="rescanBtn" style="padding:4px 10px;font-size:12px">重新扫描</button>
+    <button class="ghost" id="scanClose" style="padding:4px 9px">关闭</button>
+  </div>
+  <div class="drawer-body">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <span id="scanHint" style="color:var(--muted);font-size:12px">点击「扫描」发现本机监听服务</span>
+      <div class="spacer"></div>
+      <button class="ghost" id="toggleIgnored" style="display:none;padding:2px 8px;font-size:12px"></button>
+    </div>
+    <div class="scan-drawer-list" id="scanList"></div>
+    <div class="ignored-bar" id="ignoredBar" style="display:none"></div>
+  </div>
+</aside>
+
+<aside class="drawer" id="eventsDrawer">
+  <div class="drawer-head">
+    <h3>最近动态</h3>
+    <div class="spacer"></div>
+    <button class="ghost" id="eventsClose" style="padding:4px 9px">关闭</button>
+  </div>
+  <div class="drawer-body" id="eventsList"></div>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const state = {
+    entries: [],
+    ignoredPorts: [],
+    selfPort: null,
+    summary: null,
+    resources: null,
+    settings: { sweepMs: 60000 },
+    events: [],
+    lastScan: null,
+    filter: 'all',
+    search: '',
+    sortKey: 'status',
+    sortDir: 1,
+    editing: null,
+    detailId: null,
+    scanOpen: false,
+    eventsOpen: false,
+    showIgnored: false,
+    selectedIds: new Set(),
+  };
+  const $ = (id) => document.getElementById(id);
+
+  const tokenKey = 'portboard_token';
+  const themeKey = 'portboard_theme';
+  const validThemes = new Set(['minimal', 'warm', 'classic', 'graphite']);
+  const getToken = () => localStorage.getItem(tokenKey) || '';
+  const setToken = (v) => v ? localStorage.setItem(tokenKey, v) : localStorage.removeItem(tokenKey);
+
+  function applyTheme(theme) {
+    const t = validThemes.has(theme) ? theme : 'minimal';
+    document.documentElement.dataset.theme = t;
+    document.querySelectorAll('.theme-dot').forEach((btn) => {
+      btn.classList.toggle('active', btn.dataset.themeVal === t);
+    });
+    localStorage.setItem(themeKey, t);
+  }
+  applyTheme(localStorage.getItem(themeKey) || 'minimal');
+  $('themeDots').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-theme-val]');
+    if (btn) applyTheme(btn.dataset.themeVal);
+  });
+
+  function toast(msg, isError = false) {
+    const el = $('toast');
+    el.textContent = msg;
+    el.className = 'toast show' + (isError ? ' err' : '');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => { el.className = 'toast'; }, 2800);
+  }
+
+  async function api(path, options = {}) {
+    const headers = { ...(options.headers || {}) };
+    if (options.body) headers['content-type'] = 'application/json';
+    const token = getToken();
+    if (token) headers['x-portboard-token'] = token;
+    const res = await fetch(path, { ...options, headers });
+    const text = await res.text();
+    let data = null;
+    try { data = text ? JSON.parse(text) : null; } catch { data = text; }
+    if (res.status === 401) {
+      $('tokenBanner').classList.add('show');
+      throw new Error('需要 token');
+    }
+    if (!res.ok) throw new Error((data && data.error) || ('HTTP ' + res.status));
+    return data;
+  }
+
+  function askConfirm(title, message, danger = false) {
+    return new Promise((resolve) => {
+      $('confirmTitle').textContent = title;
+      $('confirmMsg').textContent = message;
+      const okBtn = $('confirmOk');
+      okBtn.className = danger ? 'danger-solid' : 'primary';
+      okBtn.textContent = danger ? '确认执行' : '确认';
+      const dlg = $('confirmDlg');
+      const cleanup = (result) => {
+        okBtn.removeEventListener('click', onOk);
+        $('confirmCancel').removeEventListener('click', onCancel);
+        dlg.removeEventListener('cancel', onCancel);
+        dlg.close();
+        resolve(result);
+      };
+      const onOk = () => cleanup(true);
+      const onCancel = () => cleanup(false);
+      okBtn.addEventListener('click', onOk);
+      $('confirmCancel').addEventListener('click', onCancel);
+      dlg.addEventListener('cancel', onCancel);
+      dlg.showModal();
+    });
+  }
+
+  function ageDays(iso) {
+    if (!iso) return null;
+    return Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 86400000));
+  }
+
+  function agoText(days) {
+    if (days === null) return '-';
+    if (days === 0) return '今天';
+    if (days === 1) return '昨天';
+    return days + ' 天前';
+  }
+
+  const statusMeta = {
+    running: { label: '运行中', cls: 'running', rank: 0 },
+    stopped: { label: '已停止', cls: 'stopped', rank: 1 },
+    never: { label: '未运行', cls: 'never', rank: 2 },
+    unknown: { label: '未知', cls: 'unknown', rank: 3 },
+  };
+
+  function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  function idleDaysOf(e) {
+    return e.lastStatus === 'running' ? null : ageDays(e.lastSeenRunningAt || e.createdAt);
+  }
+
+  function visibleEntries() {
+    const q = state.search.trim().toLowerCase();
+    return state.entries
+      .filter((e) => {
+        if (state.filter === 'all') return true;
+        return e.lastStatus === state.filter;
+      })
+      .filter((e) => {
+        if (!q) return true;
+        return [e.name, e.port, e.command, e.cwd, e.note, e.owner, e.processName]
+          .filter(Boolean).join(' ').toLowerCase().includes(q);
+      })
+      .sort((a, b) => {
+        const dir = state.sortDir;
+        if (state.sortKey === 'name') return dir * a.name.localeCompare(b.name, 'zh-CN');
+        if (state.sortKey === 'port') return dir * (a.port - b.port);
+        if (state.sortKey === 'seen') {
+          const ta = a.lastSeenRunningAt ? new Date(a.lastSeenRunningAt).getTime() : -1;
+          const tb = b.lastSeenRunningAt ? new Date(b.lastSeenRunningAt).getTime() : -1;
+          return dir * (tb - ta);
+        }
+        if (state.sortKey === 'idle') {
+          const ia = idleDaysOf(a) ?? -1;
+          const ib = idleDaysOf(b) ?? -1;
+          return dir * (ib - ia);
+        }
+        const ra = (statusMeta[a.lastStatus] || statusMeta.unknown).rank;
+        const rb = (statusMeta[b.lastStatus] || statusMeta.unknown).rank;
+        return dir * (ra - rb) || (a.port - b.port);
+      });
+  }
+
+  function renderSortHeaders() {
+    document.querySelectorAll('th.sortable').forEach((th) => {
+      const ind = th.querySelector('.sort-ind');
+      if (th.dataset.sort === state.sortKey) {
+        ind.textContent = state.sortDir > 0 ? '▲' : '▼';
+      } else {
+        ind.textContent = '';
+      }
+    });
+  }
+
+  const icons = {
+    play: '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 3.2v9.6l8-4.8-8-4.8z"/></svg>',
+    stop: '<svg viewBox="0 0 16 16" fill="currentColor"><rect x="3.5" y="3.5" width="9" height="9" rx="1.5"/></svg>',
+    restart: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8a5.5 5.5 0 1 1-1.4-3.7"/><path d="M13.5 2.8v2.7h-2.7"/></svg>',
+    check: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5h2.5l1.6-3.5 2.4 6 1.5-2.5h3"/></svg>',
+    detail: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 4.5h10M3 8h10M3 11.5h6.5"/></svg>',
+  };
+
+  function fmtBytes(bytes) {
+    if (typeof bytes !== 'number' || !Number.isFinite(bytes)) return '-';
+    if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
+    if (bytes < 1024 * 1024 * 1024) return `${Math.round(bytes / (1024 * 1024))} MB`;
+    return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
+  }
+
+  function renderStats() {
+    const s = state.summary || { total: 0, running: 0, stoppedBefore: 0, never: 0 };
+    $('sTotal').textContent = s.total;
+    $('sRunning').textContent = s.running;
+    $('sStopped').textContent = s.stoppedBefore;
+    $('sNever').textContent = s.never;
+    document.querySelectorAll('.stat[data-filter]').forEach((card) => {
+      card.classList.toggle('active', card.dataset.filter === state.filter);
+    });
+
+    const res = state.resources || {};
+    $('rMem').textContent = res.processCount ? fmtBytes(res.memBytes) : '-';
+    $('rMemSub').textContent = res.processCount ? `共 ${res.processCount} 个运行中进程` : '暂无运行中进程';
+    $('rCpu').textContent = typeof res.cpuPercent === 'number' ? `${res.cpuPercent.toFixed(1)}%` : '-';
+    $('rCpuSub').textContent = res.sampledAt ? `采样于 ${new Date(res.sampledAt).toLocaleTimeString()}` : '等待采样…';
+    const curSweep = String(state.settings?.sweepMs ?? 60000);
+    if ([...$('sweepSelect').options].some((o) => o.value === curSweep)) {
+      $('sweepSelect').value = curSweep;
+    }
+  }
+
+  function renderBulkBar(visibleRows) {
+    const validIds = new Set(state.entries.map((e) => e.id));
+    for (const id of [...state.selectedIds]) {
+      if (!validIds.has(id)) state.selectedIds.delete(id);
+    }
+    const count = state.selectedIds.size;
+    $('bulkBar').classList.toggle('show', count > 0);
+    $('bulkCount').textContent = `已选 ${count} 项`;
+    $('chkAll').checked = visibleRows.length > 0 && visibleRows.every((r) => state.selectedIds.has(r.id));
+  }
+
+  function render() {
+    renderStats();
+    renderSortHeaders();
+    const rows = visibleEntries();
+    renderBulkBar(rows);
+    $('empty').style.display = rows.length ? 'none' : 'block';
+    $('tableHint').textContent = rows.length ? `${rows.length} 条` : '';
+
+    $('rows').innerHTML = rows.map((e) => {
+      const meta = statusMeta[e.lastStatus] || statusMeta.unknown;
+      const seen = ageDays(e.lastSeenRunningAt);
+      const idle = idleDaysOf(e);
+      const idleCls = idle !== null && idle >= 30 ? 'idle-warn' : 'idle-ok';
+      const sub = [e.note, e.command].filter(Boolean).join(' · ');
+      const proc = e.processName
+        ? `${esc(e.processName)}${e.pid ? ' <span style="color:var(--dim)">#' + e.pid + '</span>' : ''}`
+        : (e.pid ? '#' + e.pid : '-');
+      const resSub = (e.lastStatus === 'running' && (typeof e.memBytes === 'number' || typeof e.cpuPercent === 'number'))
+        ? `<div class="sub">${typeof e.memBytes === 'number' ? fmtBytes(e.memBytes) : ''}${typeof e.cpuPercent === 'number' ? ` · CPU ${e.cpuPercent.toFixed(1)}%` : ''}</div>`
+        : '';
+      const httpBadge = e.lastHttp != null
+        ? `<span class="http-pill ${e.lastHttp < 400 ? 'ok' : 'bad'}">HTTP ${e.lastHttp}</span>`
+        : '';
+      const urlLink = e.url && /^https?:\/\//i.test(e.url)
+        ? `<a class="ext-link" href="${esc(e.url)}" target="_blank" rel="noreferrer" title="打开 ${esc(e.url)}" data-no-drawer>↗</a>`
+        : '';
+
+      const isSelf = state.selfPort != null && e.port === state.selfPort;
+      const isConflict = Boolean(e.portConflict);
+      const stopDisabled = isSelf || isConflict;
+      const selfTip = isSelf
+        ? ' title="PortBoard 自身不支持在页面内停止或重启"'
+        : (isConflict ? ' title="端口被其他进程占用，已阻止停止"' : '');
+      const conflictBadge = isConflict
+        ? `<span class="conflict-pill" title="${esc(e.conflictDetail || '当前监听进程与指纹不匹配')}">被占用</span>`
+        : '';
+      const activeText = e.lastStatus === 'running'
+        ? `<span style="color:var(--accent);font-size:12px">${agoText(seen)}</span>`
+        : `<span class="${idleCls}" style="font-size:12px">${idle === null ? '-' : `闲置 ${idle} 天`}</span>`;
+
+      return `
+        <tr data-row-id="${e.id}" class="${state.detailId === e.id ? 'selected' : ''}">
+          <td style="text-align:center" data-no-drawer><input type="checkbox" class="chk" data-chk-id="${e.id}" ${state.selectedIds.has(e.id) ? 'checked' : ''}></td>
+          <td><span class="status-pill ${meta.cls}"><span class="dot"></span>${meta.label}</span></td>
+          <td>
+            <div class="name-row">
+              <span class="name">${esc(e.name)}</span>
+              ${conflictBadge}
+              ${httpBadge}
+              ${urlLink}
+            </div>
+            ${sub ? `<div class="sub" title="${esc(sub)}">${esc(sub)}</div>` : ''}
+          </td>
+          <td class="port">${e.port}</td>
+          <td class="mono" style="font-size:12px;color:var(--muted)">${proc}${resSub}</td>
+          <td>${activeText}</td>
+          <td>
+            <div class="row-actions">
+              ${e.lastStatus === 'running'
+                ? `<button class="act-stop" data-act="stop" data-id="${e.id}" ${stopDisabled ? 'disabled' : ''}${selfTip}>${icons.stop}<span>停止</span></button>`
+                : (e.command ? `<button class="act-start" data-act="start" data-id="${e.id}">${icons.play}<span>启动</span></button>` : '')}
+              ${e.command ? `<button data-act="restart" data-id="${e.id}" ${(e.lastStatus === 'running' && !stopDisabled) ? '' : 'disabled'}${selfTip}>${icons.restart}<span>重启</span></button>` : ''}
+              <button data-act="check" data-id="${e.id}">${icons.check}<span>检查</span></button>
+              <button data-act="detail" data-id="${e.id}">${icons.detail}<span>详情</span></button>
+            </div>
+          </td>
+        </tr>`;
+    }).join('');
+  }
+
+  function renderScan() {
+    const scan = state.lastScan;
+    const ignored = new Set(state.ignoredPorts || []);
+    const ignoredCount = (state.ignoredPorts || []).length;
+
+    const toggleBtn = $('toggleIgnored');
+    if (ignoredCount > 0) {
+      toggleBtn.style.display = 'inline-flex';
+      toggleBtn.textContent = state.showIgnored ? `隐藏已忽略 (${ignoredCount})` : `已忽略 (${ignoredCount})`;
+    } else {
+      toggleBtn.style.display = 'none';
+      state.showIgnored = false;
+    }
+
+    if (!scan) {
+      $('scanHint').textContent = '正在等待扫描结果…';
+      $('scanList').innerHTML = '';
+    } else {
+      const registered = new Set(state.entries.map((e) => e.port));
+      const fresh = scan.ports.filter((p) => !registered.has(p.port) && !ignored.has(p.port));
+      $('scanHint').textContent = scan.error
+        ? '扫描失败：' + scan.error
+        : `共 ${scan.ports.length} 个监听端口，${fresh.length} 个未登记 · ${new Date(scan.at).toLocaleTimeString()}`;
+
+      $('scanList').innerHTML = fresh.length
+        ? fresh.map((p) => {
+            const isPublic = /^(0\.0\.0\.0|\*|::)$/.test(p.addr || '');
+            const addrText = p.addr ? (isPublic ? `${p.addr} 对外监听` : p.addr) : '本地监听';
+            return `
+              <div class="scan-item">
+                <span class="p">:${p.port}</span>
+                <div class="info">
+                  <div class="proc">${esc(p.processName || '未知进程')}${p.pid ? ' <span style="color:var(--dim)">#' + p.pid + '</span>' : ''}</div>
+                  <div class="addr ${isPublic ? 'pub' : ''}">${esc(addrText)}</div>
+                </div>
+                <button data-scan="${p.port}" data-proc="${esc(p.processName || '')}">登记</button>
+                <button class="ghost" data-ignore="${p.port}" title="忽略此端口">忽略</button>
+              </div>`;
+          }).join('')
+        : '<div style="color:var(--muted);font-size:13px;padding:18px 0;text-align:center">当前没有待登记的端口。</div>';
+    }
+
+    const bar = $('ignoredBar');
+    if (state.showIgnored && ignoredCount > 0) {
+      bar.style.display = 'flex';
+      bar.innerHTML = '<span>已忽略：</span>' + state.ignoredPorts.map((port) =>
+        `<span class="ignored-chip mono">:${port}<button data-unignore="${port}" title="恢复显示">恢复</button></span>`
+      ).join('');
+    } else {
+      bar.style.display = 'none';
+    }
+  }
+
+  async function loadDrawerLogs(id) {
+    $('drawerLogs').textContent = '加载日志中…';
+    try {
+      const data = await api(`/api/entries/${encodeURIComponent(id)}/logs?lines=150`);
+      $('drawerLogs').textContent = data.exists && data.content
+        ? data.content
+        : '(暂无托管启动日志；仅通过 PortBoard 启动的服务会记录输出)';
+      const box = $('drawerLogs');
+      box.scrollTop = box.scrollHeight;
+    } catch (err) {
+      $('drawerLogs').textContent = '读取日志失败：' + err.message;
+    }
+  }
+
+  function renderDrawer() {
+    if (!state.detailId) return;
+    const entry = state.entries.find((e) => e.id === state.detailId);
+    if (!entry) { closeDrawer(); return; }
+    const meta = statusMeta[entry.lastStatus] || statusMeta.unknown;
+    $('drawerTitle').textContent = entry.name;
+    $('drawerStatus').innerHTML = `<span class="status-pill ${meta.cls}"><span class="dot"></span>${meta.label}</span>`;
+    const srcLabel = { manual: '手动登记', agent: 'Agent 上报', scan: '扫描发现' }[entry.source] || entry.source || '手动登记';
+    const copyable = (text) => text
+      ? `<code class="mono">${esc(text)}</code><button class="copy-btn" type="button" data-copy="${esc(text)}">复制</button>`
+      : '-';
+    const resText = (entry.lastStatus === 'running' && (typeof entry.memBytes === 'number' || typeof entry.cpuPercent === 'number'))
+      ? `${typeof entry.memBytes === 'number' ? fmtBytes(entry.memBytes) : '-'} / ${typeof entry.cpuPercent === 'number' ? entry.cpuPercent.toFixed(1) + '%' : '-'}`
+      : '-';
+    const rows = [
+      ['端口', `<span class="port">${entry.port}</span>`],
+      ['来源', esc(srcLabel)],
+      ['访问地址', entry.url ? `<a href="${esc(entry.url)}" target="_blank" rel="noreferrer">${esc(entry.url)} ↗</a>` : '-'],
+      ['启动命令', copyable(entry.command)],
+      ['停止命令', copyable(entry.stopCommand)],
+      ['工作目录', copyable(entry.cwd)],
+      ['环境变量', entry.env ? `<pre class="mono" style="margin:0;white-space:pre-wrap;font-size:12px">${esc(entry.env)}</pre>` : '-'],
+      ['日志路径', copyable(entry.logFile)],
+      ['进程指纹', entry.processFingerprint ? `<code class="mono" style="font-size:12px">${esc(entry.processFingerprint)}</code>` : '-'],
+      ['冲突告警', entry.portConflict ? `<span style="color:var(--amber)">端口被其他进程占用：${esc(entry.conflictDetail || '')}</span>` : '-'],
+      ['当前进程', entry.processName ? `${esc(entry.processName)} (#${entry.pid ?? '?'})` : (entry.pid ? '#' + entry.pid : '-')],
+      ['内存 / CPU', esc(resText)],
+      ['上报者', entry.owner ? esc(entry.owner) : '-'],
+      ['最近探活', entry.lastCheckedAt ? `${new Date(entry.lastCheckedAt).toLocaleString()} (${entry.lastProbeMs ?? '-'}ms)` : '-'],
+      ['最近在跑', entry.lastSeenRunningAt ? new Date(entry.lastSeenRunningAt).toLocaleString() : '-'],
+      ['备注', entry.note ? esc(entry.note) : '-'],
+    ];
+    $('drawerMeta').innerHTML = rows.map(([k, v]) => `<div class="kv-k">${k}</div><div class="kv-v">${v}</div>`).join('');
+  }
+
+  function syncBackdrop() {
+    $('drawerBackdrop').classList.toggle('open', Boolean(state.detailId || state.scanOpen || state.eventsOpen));
+  }
+
+  function openDrawer(id) {
+    state.scanOpen = false; state.eventsOpen = false;
+    $('scanDrawer').classList.remove('open');
+    $('eventsDrawer').classList.remove('open');
+    state.detailId = id;
+    render();
+    renderDrawer();
+    $('drawer').classList.add('open');
+    syncBackdrop();
+    loadDrawerLogs(id);
+  }
+
+  function closeDrawer() {
+    state.detailId = null;
+    $('drawer').classList.remove('open');
+    syncBackdrop();
+    render();
+  }
+
+  function openScanDrawer() {
+    state.detailId = null; state.eventsOpen = false;
+    $('drawer').classList.remove('open');
+    $('eventsDrawer').classList.remove('open');
+    state.scanOpen = true;
+    render();
+    renderScan();
+    $('scanDrawer').classList.add('open');
+    syncBackdrop();
+  }
+
+  function closeScanDrawer() {
+    state.scanOpen = false;
+    $('scanDrawer').classList.remove('open');
+    syncBackdrop();
+  }
+
+  function renderEvents() {
+    const list = state.events || [];
+    $('eventsList').innerHTML = list.length
+      ? list.map((ev) => `
+          <div class="ev-item">
+            <span class="ev-time">${new Date(ev.at).toLocaleTimeString()}</span>
+            <div>
+              <div><b>${esc(ev.name || '-')}</b> <span class="mono" style="color:var(--blue)">:${ev.port ?? ''}</span></div>
+              <div style="color:var(--muted);font-size:12px">${esc(ev.message)}</div>
+            </div>
+          </div>`).join('')
+      : '<div style="color:var(--muted);font-size:13px;padding:18px 0;text-align:center">暂无状态变更记录。</div>';
+  }
+
+  function openEventsDrawer() {
+    state.detailId = null; state.scanOpen = false;
+    $('drawer').classList.remove('open');
+    $('scanDrawer').classList.remove('open');
+    state.eventsOpen = true;
+    renderEvents();
+    $('eventsDrawer').classList.add('open');
+    syncBackdrop();
+  }
+
+  function closeEventsDrawer() {
+    state.eventsOpen = false;
+    $('eventsDrawer').classList.remove('open');
+    syncBackdrop();
+  }
+
+  let tokenRequired = false;
+
+  async function load() {
+    try {
+      const data = await api('/api/state');
+      state.entries = data.entries || [];
+      state.ignoredPorts = data.ignoredPorts || [];
+      state.selfPort = data.selfPort ?? null;
+      state.summary = data.summary;
+      state.resources = data.resources || null;
+      state.settings = data.settings || state.settings;
+      state.events = data.events || [];
+      state.lastScan = data.lastScan || state.lastScan;
+      tokenRequired = Boolean(data.tokenRequired);
+      if (tokenRequired && !getToken()) {
+        $('tokenBanner').classList.add('show');
+        $('connBadge').textContent = '待输入令牌';
+        $('connBadge').classList.remove('live');
+      }
+      render();
+      renderScan();
+      if (state.detailId) renderDrawer();
+      if (state.eventsOpen) renderEvents();
+    } catch (err) {
+      if (err.message !== '需要 token') toast(err.message, true);
+    }
+  }
+
+  function connectEvents() {
+    if (connectEvents._es) {
+      connectEvents._es.close();
+      connectEvents._es = null;
+    }
+    const badge = $('connBadge');
+    const token = getToken();
+    if (tokenRequired && !token) {
+      badge.textContent = '待输入令牌';
+      badge.classList.remove('live');
+      return;
+    }
+    const url = token ? `/api/events?token=${encodeURIComponent(token)}` : '/api/events';
+    const es = new EventSource(url);
+    connectEvents._es = es;
+    let errCount = 0;
+    badge.textContent = '连接中';
+    badge.classList.remove('live');
+    es.addEventListener('ready', () => {
+      errCount = 0;
+      badge.textContent = '实时同步';
+      badge.classList.add('live');
+    });
+    es.addEventListener('state', () => load());
+    es.addEventListener('scan', () => load());
+    es.onerror = () => {
+      errCount += 1;
+      badge.classList.remove('live');
+      if (errCount >= 2) {
+        es.close();
+        connectEvents._es = null;
+        badge.textContent = '轮询模式';
+      } else {
+        badge.textContent = '重连中';
+      }
+    };
+  }
+
+  function openDialog(entry) {
+    state.editing = entry || null;
+    $('dlgTitle').textContent = entry ? '编辑服务' : '登记服务';
+    const f = $('dlgForm');
+    f.reset();
+    if (entry) {
+      f.name.value = entry.name || '';
+      f.port.value = entry.port || '';
+      f.url.value = entry.url || '';
+      f.command.value = entry.command || '';
+      f.stopCommand.value = entry.stopCommand || '';
+      f.cwd.value = entry.cwd || '';
+      f.env.value = entry.env || '';
+      f.logFile.value = entry.logFile || '';
+      f.processFingerprint.value = entry.processFingerprint || '';
+      f.note.value = entry.note || '';
+    }
+    $('dlg').showModal();
+  }
+
+  function openNewDialog(prefill = {}) {
+    state.editing = null;
+    $('dlgTitle').textContent = '添加服务';
+    const f = $('dlgForm');
+    f.reset();
+    f.name.value = prefill.name || '';
+    f.port.value = prefill.port || '';
+    f.url.value = prefill.url || '';
+    $('dlg').showModal();
+  }
+
+  $('dlgCancel').addEventListener('click', () => $('dlg').close());
+  $('dlgForm').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const f = $('dlgForm');
+    const body = {
+      name: f.name.value.trim(),
+      port: Number(f.port.value),
+      url: f.url.value.trim(),
+      command: f.command.value.trim(),
+      stopCommand: f.stopCommand.value.trim(),
+      cwd: f.cwd.value.trim(),
+      env: f.env.value.trim(),
+      logFile: f.logFile.value.trim(),
+      processFingerprint: f.processFingerprint.value.trim(),
+      note: f.note.value.trim(),
+    };
+    try {
+      if (state.editing) {
+        await api('/api/entries/' + encodeURIComponent(state.editing.id), { method: 'PATCH', body: JSON.stringify(body) });
+        toast('已更新');
+      } else {
+        await api('/api/entries', { method: 'POST', body: JSON.stringify(body) });
+        toast('已登记');
+      }
+      $('dlg').close();
+      await load();
+    } catch (err) { toast(err.message, true); }
+  });
+
+  $('addBtn').addEventListener('click', () => openNewDialog());
+  $('search').addEventListener('input', (e) => { state.search = e.target.value; render(); });
+
+  document.querySelectorAll('.stat[data-filter]').forEach((card) => {
+    card.addEventListener('click', () => {
+      const target = card.dataset.filter;
+      state.filter = state.filter === target && target !== 'all' ? 'all' : target;
+      render();
+    });
+  });
+
+  document.querySelectorAll('th.sortable').forEach((th) => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.sort;
+      if (state.sortKey === key) state.sortDir *= -1;
+      else { state.sortKey = key; state.sortDir = 1; }
+      render();
+    });
+  });
+
+  async function triggerScan() {
+    const btn = $('scanBtn');
+    const reBtn = $('rescanBtn');
+    btn.disabled = true; btn.textContent = '扫描中…';
+    reBtn.disabled = true; reBtn.textContent = '扫描中…';
+    openScanDrawer();
+    try {
+      state.lastScan = await api('/api/scan', { method: 'POST' });
+      renderScan();
+      toast('扫描完成');
+    } catch (err) { toast(err.message, true); }
+    finally {
+      btn.disabled = false; btn.textContent = '扫描';
+      reBtn.disabled = false; reBtn.textContent = '重新扫描';
+    }
+  }
+
+  $('scanBtn').addEventListener('click', triggerScan);
+  $('rescanBtn').addEventListener('click', triggerScan);
+  $('scanClose').addEventListener('click', closeScanDrawer);
+  $('toggleIgnored').addEventListener('click', () => { state.showIgnored = !state.showIgnored; renderScan(); });
+
+  $('scanList').addEventListener('click', async (e) => {
+    const regBtn = e.target.closest('button[data-scan]');
+    if (regBtn) {
+      const port = Number(regBtn.dataset.scan);
+      openNewDialog({ name: regBtn.dataset.proc || ('port-' + port), port, url: 'http://127.0.0.1:' + port });
+      return;
+    }
+    const ignBtn = e.target.closest('button[data-ignore]');
+    if (ignBtn) {
+      const port = Number(ignBtn.dataset.ignore);
+      try {
+        const res = await api('/api/scan/ignore', { method: 'POST', body: JSON.stringify({ port }) });
+        state.ignoredPorts = res.ignoredPorts || [];
+        renderScan();
+        toast(`已忽略端口 :${port}`);
+      } catch (err) { toast(err.message, true); }
+    }
+  });
+
+  $('ignoredBar').addEventListener('click', async (e) => {
+    const btn = e.target.closest('button[data-unignore]');
+    if (!btn) return;
+    const port = Number(btn.dataset.unignore);
+    try {
+      const res = await api('/api/scan/ignore/' + port, { method: 'DELETE' });
+      state.ignoredPorts = res.ignoredPorts || [];
+      renderScan();
+      toast(`已恢复端口 :${port}`);
+    } catch (err) { toast(err.message, true); }
+  });
+
+  $('rows').addEventListener('click', async (e) => {
+    if (e.target.closest('[data-no-drawer]')) return;
+    const btn = e.target.closest('button[data-act]');
+    if (!btn) {
+      const tr = e.target.closest('tr[data-row-id]');
+      if (tr) openDrawer(tr.dataset.rowId);
+      return;
+    }
+    const entry = state.entries.find((x) => x.id === btn.dataset.id);
+    if (!entry) return;
+
+    if (btn.dataset.act === 'detail') return openDrawer(entry.id);
+    if (btn.dataset.act === 'edit') return openDialog(entry);
+
+    if (btn.dataset.act === 'stop' || btn.dataset.act === 'start' || btn.dataset.act === 'restart') {
+      const act = btn.dataset.act;
+      const verb = act === 'stop' ? '停止' : act === 'start' ? '启动' : '重启';
+      const target = entry.processName
+        ? `${entry.processName} (pid ${entry.pid ?? '?'})`
+        : `端口 ${entry.port}`;
+      const msg = act === 'stop'
+        ? `将结束 ${target} 及其子进程，不可撤销。`
+        : act === 'start'
+          ? `命令：${entry.command}\n目录：${entry.cwd || '(未设置)'}`
+          : `先结束 ${target}，再执行：\n${entry.command}`;
+      if (!(await askConfirm(`${verb}「${entry.name}」`, msg, act === 'stop'))) return;
+      btn.disabled = true;
+      try {
+        const r = await api(`/api/entries/${encodeURIComponent(entry.id)}/${act}`, {
+          method: 'POST',
+          body: JSON.stringify({ confirm: entry.name }),
+        });
+        const extra = r.detail && r.detail.reason ? '：' + r.detail.reason : '';
+        toast(`${verb}完成${extra}`);
+        await load();
+        if (state.detailId === entry.id) loadDrawerLogs(entry.id);
+      } catch (err) {
+        toast(err.message, true);
+      } finally {
+        btn.disabled = false;
+      }
+      return;
+    }
+
+    if (btn.dataset.act === 'check') {
+      btn.disabled = true;
+      try {
+        const r = await api('/api/entries/' + encodeURIComponent(entry.id) + '/check', { method: 'POST' });
+        toast(`${entry.name} → ${statusMeta[r.entry.lastStatus].label} (${r.probe.ms}ms)`);
+        await load();
+      } catch (err) { toast(err.message, true); }
+      finally { btn.disabled = false; }
+      return;
+    }
+
+    if (btn.dataset.act === 'del') {
+      if (!(await askConfirm(`删除登记「${entry.name}」`, '只删除登记记录，不会停止正在运行的进程。', true))) return;
+      try {
+        await api('/api/entries/' + encodeURIComponent(entry.id), { method: 'DELETE' });
+        if (state.detailId === entry.id) closeDrawer();
+        toast('已删除');
+        await load();
+      } catch (err) { toast(err.message, true); }
+    }
+  });
+
+  $('drawerClose').addEventListener('click', closeDrawer);
+  $('drawerEdit').addEventListener('click', () => {
+    const entry = state.entries.find((x) => x.id === state.detailId);
+    if (entry) openDialog(entry);
+  });
+  $('drawerDel').addEventListener('click', async () => {
+    const entry = state.entries.find((x) => x.id === state.detailId);
+    if (!entry) return;
+    if (!(await askConfirm(`删除登记「${entry.name}」`, '只删除登记记录，不会停止正在运行的进程。', true))) return;
+    try {
+      await api('/api/entries/' + encodeURIComponent(entry.id), { method: 'DELETE' });
+      closeDrawer();
+      toast('已删除');
+      await load();
+    } catch (err) { toast(err.message, true); }
+  });
+  $('drawerBackdrop').addEventListener('click', () => { closeDrawer(); closeScanDrawer(); closeEventsDrawer(); });
+  $('eventsBtn').addEventListener('click', openEventsDrawer);
+  $('eventsClose').addEventListener('click', closeEventsDrawer);
+
+  $('sweepSelect').addEventListener('change', async (e) => {
+    const sweepMs = Number(e.target.value);
+    try {
+      const r = await api('/api/settings', { method: 'POST', body: JSON.stringify({ sweepMs }) });
+      state.settings = r.settings;
+      toast(sweepMs === 0 ? '已切换为手动采样' : `采样周期已设为 ${sweepMs / 1000} 秒`);
+    } catch (err) { toast(err.message, true); }
+  });
+
+  $('chkAll').addEventListener('change', (e) => {
+    const rows = visibleEntries();
+    if (e.target.checked) rows.forEach((r) => state.selectedIds.add(r.id));
+    else rows.forEach((r) => state.selectedIds.delete(r.id));
+    render();
+  });
+
+  $('rows').addEventListener('change', (e) => {
+    const chk = e.target.closest('input[data-chk-id]');
+    if (!chk) return;
+    if (chk.checked) state.selectedIds.add(chk.dataset.chkId);
+    else state.selectedIds.delete(chk.dataset.chkId);
+    renderBulkBar(visibleEntries());
+  });
+
+  $('bulkClear').addEventListener('click', () => { state.selectedIds.clear(); render(); });
+
+  $('bulkCheck').addEventListener('click', async () => {
+    const ids = [...state.selectedIds];
+    for (const id of ids) {
+      await api('/api/entries/' + encodeURIComponent(id) + '/check', { method: 'POST' }).catch(() => {});
+    }
+    toast(`已检查 ${ids.length} 项`);
+    await load();
+  });
+
+  $('bulkStop').addEventListener('click', async () => {
+    const targets = state.entries.filter((e) => state.selectedIds.has(e.id) && e.lastStatus === 'running' && e.port !== state.selfPort && !e.portConflict);
+    if (!targets.length) return toast('没有可停止的选中服务', true);
+    if (!(await askConfirm('批量停止服务', `将停止选中的 ${targets.length} 个运行中服务，不可撤销。`, true))) return;
+    let ok = 0;
+    for (const t of targets) {
+      try {
+        await api(`/api/entries/${encodeURIComponent(t.id)}/stop`, { method: 'POST', body: JSON.stringify({ confirm: t.name }) });
+        ok += 1;
+      } catch { /* continue */ }
+    }
+    toast(`已停止 ${ok} / ${targets.length} 个服务`);
+    state.selectedIds.clear();
+    await load();
+  });
+
+  $('bulkDel').addEventListener('click', async () => {
+    const ids = [...state.selectedIds];
+    if (!ids.length) return;
+    if (!(await askConfirm('批量删除登记', `将删除选中的 ${ids.length} 条登记记录，不会停止进程。`, true))) return;
+    for (const id of ids) {
+      await api('/api/entries/' + encodeURIComponent(id), { method: 'DELETE' }).catch(() => {});
+    }
+    state.selectedIds.clear();
+    toast(`已删除 ${ids.length} 条记录`);
+    await load();
+  });
+
+  async function copyText(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast('已复制到剪贴板');
+    } catch {
+      toast('复制失败，请手动选中复制', true);
+    }
+  }
+
+  $('drawerMeta').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-copy]');
+    if (btn) copyText(btn.dataset.copy);
+  });
+  $('copyLogs').addEventListener('click', () => copyText($('drawerLogs').textContent || ''));
+  $('refreshLogs').addEventListener('click', () => {
+    if (state.detailId) loadDrawerLogs(state.detailId);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && (state.detailId || state.scanOpen || state.eventsOpen)) {
+      closeDrawer();
+      closeScanDrawer();
+      closeEventsDrawer();
+      return;
+    }
+    if (e.key === '/' && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName || '') && !$('dlg').open) {
+      e.preventDefault();
+      $('search').focus();
+    }
+  });
+
+  $('connBadge').addEventListener('click', () => connectEvents());
+  $('tokenSave').addEventListener('click', () => {
+    setToken($('tokenInput').value.trim());
+    $('tokenBanner').classList.remove('show');
+    load().then(() => connectEvents());
+  });
+
+  load().then(() => connectEvents());
+  setInterval(() => { if (!$('dlg').open && !$('confirmDlg').open) load(); }, 30000);
+})();
+</script>
+</body>
+</html>

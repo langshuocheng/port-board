@@ -1,0 +1,16 @@
+{
+  "name": "port-board",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local service/port board: scans listening ports, accepts manual entries, and lets agents report services over HTTP.",
+  "scripts": {
+    "start": "node server.js",
+    "scan": "node cli.js scan",
+    "list": "node cli.js list",
+    "test": "node test/port-board.test.js"
+  },
+  "engines": {
+    "node": ">=14.16"
+  }
+}
